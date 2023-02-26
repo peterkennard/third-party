@@ -5,10 +5,12 @@ require "#{myDir}/build-options.rb"
 module Rakish
 
 	dependsList = [
-		'./zlib',
-		'./oss-glm',
-		'./freetype'
+	#	'./zlib',
+		'./oss-glm'
+	#	'./freetype'
 	];
+
+	cfg = BuildConfig("root");
 
 	if(cfg.targetPlatform =~ /MacOS/ )
 #		dependsList << './ogl-glfw';
@@ -63,6 +65,8 @@ module Rakish
 	# 		add_definitions(-DANGLE_ENABLE_OPENGL_NULL)
 	# 	endif()
 	# endif()
-	Rakish.Project(:dependsUpon=>dependsList);
+
+	Rakish.Project(:dependsUpon=>dependsList) do
+	end
 
 end
