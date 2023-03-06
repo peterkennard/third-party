@@ -45,11 +45,6 @@ Rakish.Project(
 #                 "#{vendorBuildDir}/lib/Debug/libpng16d.lib"
 #             );
         elsif(targetPlatform =~ /MacOS/)
-            cfg.addThirdPartyLibs(
-                "#{vendorBuildDir}/lib/libglfw#{cfg.dllExt}",
-#                "#{vendorBuildDir}/lib/libglfw.3#{cfg.dllExt}",
-#                "#{vendorBuildDir}/lib/libglfw.3.4#{cfg.dllExt}"
-            );
         end
 
         task :buildVendorLibs => [sourceSubdir] do |t|
@@ -88,11 +83,10 @@ Rakish.Project(
 #                                             :basedir => "#{vendorBuildDir}"
 #                                             )
                 elsif(targetPlatform =~ /MacOS/)
-# the angle sample doesn't use this
-#                    flist = createCopyTasks("#{nativeLibDir}",
-#                                            "#{vendorBuildDir}/lib/libglfw*#{cfg.dllExt}",
-#                                            :basedir => "#{vendorBuildDir}/lib"
-#                                           )
+                    flist = createCopyTasks("#{nativeLibDir}",
+                                            "#{vendorBuildDir}/lib/libglfw*#{cfg.dllExt}",
+                                            :basedir => "#{vendorBuildDir}/lib"
+                                           )
                 end
 
                 task pubTargs.addDependencies(flist); # add dependencies to :publicTargets
@@ -103,9 +97,9 @@ Rakish.Project(
 
             pubTargs.addDependencies(ifiles);
 
-#             cfg.addThirdPartyLibs(
-#                 "#{buildDir}/lib/libglfw#{cfg.dllExt}"
-#             );
+             cfg.addExportedLibs(
+                 "#{nativeLibDir}/libglfw#{cfg.dllExt}"
+             );
 
         end
 
