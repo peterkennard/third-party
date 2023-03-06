@@ -6,14 +6,14 @@ module Rakish
 
 	dependsList = [
 	#	'./zlib',
-		'./oss-glm'
+		'./oss-glm',
 	#	'./freetype'
 	];
 
 	cfg = BuildConfig("root");
 
 	if(cfg.targetPlatform =~ /MacOS/ )
-#		dependsList << './ogl-glfw';
+		dependsList << './oss-glfw';
 	end
 
 	#
