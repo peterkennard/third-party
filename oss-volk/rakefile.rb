@@ -7,17 +7,16 @@ depends=[
 
 Rakish.Project(
     :includes=>[Rakish::CppProjectModule, Rakish::GitModule ],
-	:name 		 => "oss-glfw",
+	:name 		 => "oss-volk",
 	:dependsUpon => [ depends ]
 ) do
 
-	libSource = "#{projectDir}/glfw";
+	libSource = "#{projectDir}/volk";
 
     setSourceSubdir(libSource);
 
 	file libSource do |t|
-	    git.clone("https://github.com/glfw/glfw.git", t.name );
-		# git.clone("git.didi.co:/home/didi/oss-vendor/freetype2.git", t.name );
+        git.clone( "https://github.com/zeux/volk.git", t.name );
 		git.checkout("master", :dir=>t.name);
 	end
 
@@ -52,18 +51,14 @@ Rakish.Project(
                 if(targetPlatform =~ /Windows/ )
                     cmd=" echo \"build not implemented for Windows\""
                 elsif(targetPlatform =~ /MacOS/)
-                    cmd = "#{cmakeCommand} -G \"Unix Makefiles\""
-                    cmd += " \"-DBUILD_SHARED_LIBS=1\""
-                    cmd += " \"-DGLFW_BUILD_TESTS=0\""
-                    cmd += " \"-DGLFW_BUILD_DOCS=0\""
-                    cmd += " \"-DGLFW_INSTALL=0\""
+                    cmd = "python3 generate.py"
                 end
-                cmd += " .."
                 system(cmd);
             end
+
             FileUtils::cd(projectDir) do
-              cmd = "#{cmakeCommand} --build build --config RELEASE";
-              system(cmd);
+#              cmd = "#{cmakeCommand} --build build --config RELEASE";
+#              system(cmd);
 #                cmd = "#{cmakeCommand} --build build --config DEBUG";
 #                 system(cmd);
 #
@@ -71,31 +66,25 @@ Rakish.Project(
                 flist = nil;
                 if(targetPlatform =~ /Windows/ )
                     flist = [];
-#                     createCopyTasks("#{buildDir}",
-#                                             "#{vendorBuildDir}/bin/Debug/libpng*.*",
-#                                             "#{vendorBuildDir}/bin/Release/libpng*.*",
-#                                             "#{vendorBuildDir}/lib/Debug/libpng*.*",
-#                                             "#{vendorBuildDir}/lib/Release/libpng*.*",
-#                                             :basedir => "#{vendorBuildDir}"
-#                                             )
                 elsif(targetPlatform =~ /MacOS/)
-                    flist = createCopyTasks("#{nativeLibDir}",
-                                            "#{vendorBuildDir}/lib/libglfw*#{cfg.dllExt}",
-                                            :basedir => "#{vendorBuildDir}/lib"
-                                           )
+                    frlist = [];
+ #                   flist = createCopyTasks("#{nativeLibDir}",
+ #                                           "#{vendorBuildDir}/lib/libglfw*#{cfg.dllExt}",
+ #                                           :basedir => "#{vendorBuildDir}/lib"
+ #                                          )
                 end
 
                 task pubTargs.addDependencies(flist); # add dependencies to :publicTargets
             end
 
-            ifiles = addPublicIncludes("#{libSource}/include/GLFW/*.h",
-                                       :destdir=> "GLFW" );
+#            ifiles = addPublicIncludes("#{libSource}/include/GLFW/*.h",
+#                                       :destdir=> "GLFW" );
 
-            pubTargs.addDependencies(ifiles);
+#            pubTargs.addDependencies(ifiles);
 
-             cfg.addExportedLibs(
-                 "#{nativeLibDir}/libglfw#{cfg.dllExt}"
-             );
+#             cfg.addExportedLibs(
+#                 "#{nativeLibDir}/libglfw#{cfg.dllExt}"
+#             );
 
         end
 
