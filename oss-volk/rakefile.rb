@@ -53,7 +53,7 @@ Rakish.Project(
                 elsif(targetPlatform =~ /MacOS/)
                     cmd = "python3 generate.py"
                 end
-                system(cmd);
+#                system(cmd);
             end
 
             FileUtils::cd(projectDir) do
