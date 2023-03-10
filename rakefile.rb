@@ -7,7 +7,7 @@ module Rakish
 	dependsList = [
 	#	'./zlib',
 		'./oss-glm',
-		'./oss-volk'
+		'./oss-volk',
 	#	'./freetype'
 	];
 
@@ -15,6 +15,7 @@ module Rakish
 
 	if(cfg.targetPlatform =~ /MacOS/ )
 		dependsList << './oss-glfw';
+        dependsList << './molten-vk';
 	end
 
 	Rakish.Project(:dependsUpon=>dependsList) do
