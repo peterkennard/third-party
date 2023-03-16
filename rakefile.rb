@@ -1,8 +1,10 @@
 myDir = File.dirname(__FILE__);
-require "#{myDir}/build-options.rb"
+require "#{myDir}/../build-options.rb"
 
 
 module Rakish
+
+	cfg = BuildConfig("root");
 
 	dependsList = [
 	#	'./zlib',
@@ -11,7 +13,6 @@ module Rakish
 	#	'./freetype'
 	];
 
-	cfg = BuildConfig("root");
 
 	if(cfg.targetPlatform =~ /MacOS/ )
 		dependsList << './oss-glfw';
