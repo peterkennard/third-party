@@ -32,7 +32,7 @@ Rakish.Project(
     end
 
     setupCppConfig :targetType=>'DLL' do |cfg|
-        cfg.targetName = 'glfw';
+        cfg.targetName = 'volk';
 
         pubTargs = task :publicTargets;
 

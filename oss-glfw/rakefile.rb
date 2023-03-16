@@ -50,7 +50,11 @@ Rakish.Project(
                 cmd = nil;
 
                 if(targetPlatform =~ /Windows/ )
-                    cmd=" echo \"build not implemented for Windows\""
+                    cmd = "#{cmakeCommand} -G \"Visual Studio 16 2019\""
+                    cmd += " \"-DBUILD_SHARED_LIBS=1\""
+                    cmd += " \"-DGLFW_BUILD_TESTS=0\""
+                    cmd += " \"-DGLFW_BUILD_DOCS=0\""
+                    cmd += " \"-DGLFW_INSTALL=0\""
                 elsif(targetPlatform =~ /MacOS/)
                     cmd = "#{cmakeCommand} -G \"Unix Makefiles\""
                     cmd += " \"-DBUILD_SHARED_LIBS=1\""
@@ -61,23 +65,29 @@ Rakish.Project(
                 cmd += " .."
                 system(cmd);
             end
+
             FileUtils::cd(projectDir) do
-              cmd = "#{cmakeCommand} --build build --config RELEASE";
-              system(cmd);
-#                cmd = "#{cmakeCommand} --build build --config DEBUG";
-#                 system(cmd);
-#
+                cmd = "#{cmakeCommand} --build build --config RELEASE";
+                system(cmd);
+
                 # list of files to copy to main build lib and bin areas
                 flist = nil;
                 if(targetPlatform =~ /Windows/ )
+
+                    cmd = "#{cmakeCommand} --build build --config DEBUG";
+                    system(cmd);
+
                     flist = [];
-#                     createCopyTasks("#{buildDir}",
-#                                             "#{vendorBuildDir}/bin/Debug/libpng*.*",
-#                                             "#{vendorBuildDir}/bin/Release/libpng*.*",
-#                                             "#{vendorBuildDir}/lib/Debug/libpng*.*",
-#                                             "#{vendorBuildDir}/lib/Release/libpng*.*",
-#                                             :basedir => "#{vendorBuildDir}"
-#                                             )
+
+                    flist << createCopyTasks("#{binDir}",
+                                            "#{vendorBuildDir}/lib/Debug/glfw3.dll",
+                                            "#{vendorBuildDir}/lib/Debug/glfw3.pdb",
+                                            :basedir => "#{vendorBuildDir}/bin"
+                                           )
+                    flist << createCopyTasks("#{nativeLibDir}",
+                                            "#{vendorBuildDir}/lib/Debug/glfw3dll.lib",
+                                            :basedir => "#{vendorBuildDir}/lib"
+                                           )
                 elsif(targetPlatform =~ /MacOS/)
                     flist = createCopyTasks("#{nativeLibDir}",
                                             "#{vendorBuildDir}/lib/libglfw*#{cfg.dllExt}",
@@ -93,9 +103,13 @@ Rakish.Project(
 
             pubTargs.addDependencies(ifiles);
 
-             cfg.addExportedLibs(
-                 "#{nativeLibDir}/libglfw#{cfg.dllExt}"
-             );
+            explibs = nil;
+            if(targetPlatform =~ /Windows/ )
+                explibs = "#{vendorBuildDir}/lib/Debug/glfw3dll.lib";
+            elsif(targetPlatform =~ /MacOS/)
+                 explibs = "#{nativeLibDir}/libglfw#{cfg.dllExt}";
+            end
+            cfg.addExportedLibs(explibs);
 
         end
 

@@ -13,9 +13,9 @@ module Rakish
 	#	'./freetype'
 	];
 
+    dependsList << './oss-glfw';
 
 	if(cfg.targetPlatform =~ /MacOS/ )
-		dependsList << './oss-glfw';
         dependsList << './molten-vk';
 	end
 

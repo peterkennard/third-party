@@ -3,11 +3,9 @@
 #
 cmake_minimum_required (VERSION 3.8)
 
-project ("oss-libs")
+project ("third-party")
 
-if(APPLE)
-    add_subdirectory ("./oss-glfw")
-endif()
+add_subdirectory("./oss-glfw")
 
 # add_subdirectory ("./zlib")
 # add_subdirectory ("./oss-libpng")
