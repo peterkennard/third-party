@@ -1,4 +1,3 @@
-#
 
 myDir = File.expand_path(File.dirname(__FILE__));
 require "#{myDir}/../build-options.rb"
@@ -22,13 +21,14 @@ Rakish.Project(
 	    git.clone("https://github.com/KhronosGroup/MoltenVK.git", t.name );
 	end
 
+if(false)
     export task :cleanAll => sourceSubdir do |t|
         FileUtils.rm_rf(vendorBuildDir);  # remove recursive
         FileUtils.cd sourceSubdir do
             system('git reset --hard');  # Maybe delete and re-download - though a bit slow
         end
     end
-
+end
     export task :vendorLibs => [ libSource ] do |t|
     end
 
