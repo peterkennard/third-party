@@ -7,6 +7,12 @@ project ("third-party")
 
 add_subdirectory("./oss-glfw")
 
+if(WIN32)
+    add_subdirectory ("./vulkan-sdk-windows")
+elseif(APPLE)
+    add_subdirectory ("./vulkan-sdk-macos")
+endif()
+
 # add_subdirectory ("./zlib")
 # add_subdirectory ("./oss-libpng")
 # add_subdirectory ("./freetype")
