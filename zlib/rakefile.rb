@@ -31,18 +31,11 @@ Rakish.Project(
        cfg.cmakeExport = true;
 
        if(targetPlatform =~ /Windows/)
-           cfg.addThirdPartyLibs(
-               "#{vendorBuildDir}/lib/Release/zlib#{cfg.dllExt()}",
-               "#{vendorBuildDir}/bin/Release/zlib#{cfg.dllExt()}"
-           );
        elsif(targetPlatform =~ /MacOS/)
-           cfg.addThirdPartyLibs(
-               "#{vendorBuildDir}/lib/libz#{cfg.dllExt()}",
-               "#{vendorBuildDir}/lib/libz#{cfg.libExt()}"
-           );
        end
 
        task :buildVendorLibs => [sourceSubdir] do |t|
+
             FileUtils.mkdir_p(vendorBuildDir);  # make sure it is there
             FileUtils::cd(vendorBuildDir) do
                 cmd = "#{cmakeCommand} -G \"#{cMakeGenerator}\""
@@ -50,7 +43,10 @@ Rakish.Project(
                 system(cmd);
             end
 
+            cfg.cmakeExport = true;
+
             FileUtils::cd(projectDir) do
+
                 cmd = "#{cmakeCommand} --build build --config RELEASE";
                 system(cmd);
                 cmd = "#{cmakeCommand} --build build --config DEBUG";
@@ -60,19 +56,21 @@ Rakish.Project(
 
                 flist = [];
                 if(targetPlatform =~ /Windows/)
-#                    log.debug("################## \n #{flist} \n\n #########")
 
-                    flist = createCopyTasks("#{buildDir}",
-                                            "#{vendorBuildDir}/bin/Debug/zlib*.*",
-                                            "#{vendorBuildDir}/bin/Release/zlib*.*",
-                                            "#{vendorBuildDir}/lib/Debug/zlib*.*",
-                                            "#{vendorBuildDir}/lib/Release/zlib*.*",
-                                            :basedir => "#{vendorBuildDir}"
+                    # we copy the release library and dll to the current bin and lib folder
+                    flist = createCopyTasks("#{binDir}",
+                                            "#{vendorBuildDir}/bin/Release/zlib*#{cfg.dllExt}",
+                                            :basedir => "#{vendorBuildDir}/bin/Release"
                                             )
+                    flist << createCopyTasks("#{nativeLibDir}",
+                                            "#{vendorBuildDir}/lib/Debug/zlib*#{cfg.libExt}",
+                                            :basedir => "#{vendorBuildDir}/lib/Release"
+                                           )
+
                 elsif(targetPlatform =~ /MacOS/)
                     flist = createCopyTasks("#{buildDir}",
-                                            "#{vendorBuildDir}/lib/libz*#{cfg.dllExt}",
-                                            "#{vendorBuildDir}/lib/libz*#{cfg.libExt}",
+                                            "#{vendorBuildDir}/lib/Debug/libz*#{cfg.dllExt}",
+                                            "#{vendorBuildDir}/lib/Release/libz*#{cfg.libExt}",
                                             :basedir => "#{vendorBuildDir}"
                                             )
                 end
@@ -85,6 +83,14 @@ Rakish.Project(
                 "#{sourceSubdir}/zlib.h"
             );
             pubTargs.addDependencies(incfiles);
+
+            explibs = nil;
+            if(targetPlatform =~ /Windows/ )
+                explibs = "#{nativeLibDir}/zlib.lib";
+            elsif(targetPlatform =~ /MacOS/)
+                explibs = "#{nativeLibDir}/libglfw#{cfg.dllExt}";
+            end
+            cfg.addExportedLibs(explibs);
         end
     end
 

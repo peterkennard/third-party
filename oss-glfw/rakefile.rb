@@ -89,6 +89,7 @@ Rakish.Project(
                                             :basedir => "#{vendorBuildDir}/lib/Debug"
                                            )
                 elsif(targetPlatform =~ /MacOS/)
+
                     flist = createCopyTasks("#{nativeLibDir}",
                                             "#{vendorBuildDir}/lib/libglfw*#{cfg.dllExt}",
                                             :basedir => "#{vendorBuildDir}/lib/Debug"
@@ -105,7 +106,7 @@ Rakish.Project(
 
             explibs = nil;
             if(targetPlatform =~ /Windows/ )
-                explibs = "#{vendorBuildDir}/lib/Debug/glfw3dll.lib";
+                 explibs = "#{nativeLibDir}/glfw3dll#{cfg.libExt}";
             elsif(targetPlatform =~ /MacOS/)
                  explibs = "#{nativeLibDir}/libglfw#{cfg.dllExt}";
             end
