@@ -7,7 +7,7 @@ module Rakish
 	cfg = BuildConfig("root");
 
 	dependsList = [
-		'./zlib',
+		'./oss-zlib',
 		'./oss-glm',
 		'./oss-volk',
 		'./oss-glfw',

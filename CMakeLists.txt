@@ -13,6 +13,7 @@ elseif(APPLE)
     add_subdirectory ("./vulkan-sdk-macos")
 endif()
 
-# add_subdirectory ("./zlib")
+add_subdirectory ("./oss-zlib")
+
 # add_subdirectory ("./oss-libpng")
 # add_subdirectory ("./freetype")
