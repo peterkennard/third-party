@@ -3,6 +3,7 @@ require "#{myDir}/../build-options.rb"
 require "rakish/GitModule"
 
 depends=[
+    "../oss-zlib"
 ]
 
 Rakish.Project(
