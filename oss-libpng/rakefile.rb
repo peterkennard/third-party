@@ -3,7 +3,7 @@ require "#{myDir}/../build-options.rb"
 require "rakish/GitModule"
 
 depends=[
-    "../oss-zlib"
+#    "../oss-zlib"
 ]
 
 Rakish.Project(
@@ -12,13 +12,14 @@ Rakish.Project(
 	:dependsUpon => [ depends ]
 ) do
 
-	libSource = "#{projectDir}/glfw";
+	libSource = "#{projectDir}/libpng";
 
     setSourceSubdir(libSource);
 
 	file libSource do |t|
-	    git.clone("https://github.com/glennrp/libpng.git", t.name );
-	#	git.checkout("master", :dir=>t.name);
+	    # git.clone("https://github.com/glennrp/libpng.git", t.name );
+        git.clone('https://github.com/emscripten-ports/libpng.git', t.name );
+	    git.checkout("libpng16", :dir=>libSource );
 	end
 
     vendorBuildDir = ensureDirectoryTask("#{projectDir}/build");
@@ -45,32 +46,35 @@ Rakish.Project(
 
                 cmd = nil;
 
-if false
                 if(targetPlatform =~ /Windows/ )
-                    cmd = "#{cmakeCommand} -G \"Visual Studio 16 2019\""
+
+                    cmd = "#{cmakeCommand} -G \"Visual Studio 16 2019\" -B \"#{projectDir}/build\""
                     cmd += " \"-DBUILD_SHARED_LIBS=1\""
                     cmd += " \"-DGLFW_BUILD_TESTS=0\""
-                    cmd += " \"-DGLFW_BUILD_DOCS=0\""
-                    cmd += " \"-DGLFW_INSTALL=0\""
-                elsif(targetPlatform =~ /MacOS/)
+                    cmd += " \"-DZLIB_LIBRARY=#{buildDir}/lib/Debug/zlib.lib\""
+                    cmd += " \"-DZLIB_INCLUDE_DIR=#{buildDir}/include\""
+
+                 elsif(targetPlatform =~ /MacOS/)
+
                     cmd = "#{cmakeCommand} -G \"Unix Makefiles\""
                     cmd += " \"-DBUILD_SHARED_LIBS=1\""
                     cmd += " \"-DGLFW_BUILD_TESTS=0\""
                     cmd += " \"-DGLFW_BUILD_DOCS=0\""
                     cmd += " \"-DGLFW_INSTALL=0\""
+
                 end
                 cmd += " .."
                 system(cmd);
-end
             end
 
             FileUtils::cd(projectDir) do
-if false
+
                 cmd = "#{cmakeCommand} --build build --config RELEASE";
                 system(cmd);
-end
+
                 # list of files to copy to main build lib and bin areas
-                flist = nil;
+                flist = [];
+if false
                 if(targetPlatform =~ /Windows/ )
 
                     cmd = "#{cmakeCommand} --build build --config DEBUG";
@@ -94,14 +98,15 @@ end
                                             :basedir => "#{vendorBuildDir}/lib/Debug"
                                            )
                 end
-
+end
                 task pubTargs.addDependencies(flist); # add dependencies to :publicTargets
             end
 
-            ifiles = addPublicIncludes("#{libSource}/include/GLFW/*.h",
-                                       :destdir=> "GLFW" );
+#            ifiles = addPublicIncludes("#{libSource}/include/GLFW/*.h",
+#                                       :destdir=> "GLFW" );
 
             pubTargs.addDependencies(ifiles);
+
 if false
             explibs = nil;
             if(targetPlatform =~ /Windows/ )
@@ -111,7 +116,6 @@ if false
             end
             cfg.addExportedLibs(explibs);
 end
-
         end
 
         export task :vendorLibs => [ :buildVendorLibs, :includes, :publicTargets ] do
