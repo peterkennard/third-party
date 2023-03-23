@@ -105,7 +105,7 @@ end
 #            ifiles = addPublicIncludes("#{libSource}/include/GLFW/*.h",
 #                                       :destdir=> "GLFW" );
 
-            pubTargs.addDependencies(ifiles);
+#            pubTargs.addDependencies(ifiles);
 
 if false
             explibs = nil;
