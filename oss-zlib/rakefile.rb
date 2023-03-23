@@ -38,7 +38,7 @@ Rakish.Project(
 
             FileUtils.mkdir_p(vendorBuildDir);  # make sure it is there
             FileUtils::cd(vendorBuildDir) do
-                cmd = "#{cmakeCommand} -G \"#{cMakeGenerator}\""
+                cmd = "#{cmakeCommand} -G \"#{cMakeGenerator}\" -B \"#{vendorBuildDir}\""
                 cmd += " ..";
                 system(cmd);
             end

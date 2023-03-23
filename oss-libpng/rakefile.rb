@@ -48,7 +48,7 @@ Rakish.Project(
 
                 if(targetPlatform =~ /Windows/ )
 
-                    cmd = "#{cmakeCommand} -G \"Visual Studio 16 2019\" -B \"#{projectDir}/build\""
+                    cmd = "#{cmakeCommand} -G -G \"#{cMakeGenerator}\"" -B \"#{vendorBuildDir}\""
                     cmd += " \"-DBUILD_SHARED_LIBS=1\""
                     cmd += " \"-DGLFW_BUILD_TESTS=0\""
 
