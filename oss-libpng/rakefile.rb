@@ -51,6 +51,7 @@ Rakish.Project(
                     cmd = "#{cmakeCommand} -G \"Visual Studio 16 2019\" -B \"#{projectDir}/build\""
                     cmd += " \"-DBUILD_SHARED_LIBS=1\""
                     cmd += " \"-DGLFW_BUILD_TESTS=0\""
+
                     cmd += " \"-DZLIB_LIBRARY=#{buildDir}/lib/Debug/zlib.lib\""
                     cmd += " \"-DZLIB_INCLUDE_DIR=#{buildDir}/include\""
 

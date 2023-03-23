@@ -58,12 +58,16 @@ Rakish.Project(
                 if(targetPlatform =~ /Windows/)
 
                     # we copy the release library and dll to the current bin and lib folder
-                    flist = createCopyTasks("#{binDir}",
+                    flist = createCopyTasks("#{buildDir}/bin/Debug",
+                                            "#{vendorBuildDir}/bin/Release/zlib*#{cfg.dllExt}",
+                                            :basedir => "#{vendorBuildDir}/bin/Release"
+                                            )
+                    flist = createCopyTasks("#{buildDir}/bin/Release",
                                             "#{vendorBuildDir}/bin/Release/zlib*#{cfg.dllExt}",
                                             :basedir => "#{vendorBuildDir}/bin/Release"
                                             )
                     flist << createCopyTasks("#{nativeLibDir}",
-                                            "#{vendorBuildDir}/lib/Debug/zlib*#{cfg.libExt}",
+                                            "#{vendorBuildDir}/lib/Release/zlib*#{cfg.libExt}",
                                             :basedir => "#{vendorBuildDir}/lib/Release"
                                            )
 
