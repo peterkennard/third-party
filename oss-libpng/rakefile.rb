@@ -50,8 +50,6 @@ Rakish.Project(
 
                     cmd = "#{cmakeCommand} -G \"#{cMakeGenerator}\" -B \"#{vendorBuildDir}\""
                     cmd += " \"-DBUILD_SHARED_LIBS=1\""
-                    cmd += " \"-DGLFW_BUILD_TESTS=0\""
-
                     cmd += " \"-DZLIB_LIBRARY=#{buildDir}/lib/Debug/zlib.lib\""
                     cmd += " \"-DZLIB_INCLUDE_DIR=#{buildDir}/include\""
 
@@ -75,48 +73,48 @@ Rakish.Project(
 
                 # list of files to copy to main build lib and bin areas
                 flist = [];
-if false
+
                 if(targetPlatform =~ /Windows/ )
 
                     cmd = "#{cmakeCommand} --build build --config DEBUG";
                     system(cmd);
 
-                    flist = [];
+                    flist << createCopyTasks("#{buildDir}/bin",
+                                            "#{vendorBuildDir}/bin/Release/libpng*.dll",
+                                            "#{vendorBuildDir}/bin/Debug/libpng*.dll",
+                                            :basedir => "#{vendorBuildDir}/bin"
+                                           )
 
-                    flist << createCopyTasks("#{binDir}",
-                                            "#{vendorBuildDir}/bin/Debug/glfw3.dll",
-                                            "#{vendorBuildDir}/bin/Debug/glfw3.pdb",
-                                            :basedir => "#{vendorBuildDir}/bin/Debug"
+                    flist << createCopyTasks("#{buildDir}/lib",
+                                            "#{vendorBuildDir}/lib/Release/libpng*.lib",
+                                            "#{vendorBuildDir}/lib/Debug/libpng*.lib",
+                                            :basedir => "#{vendorBuildDir}/lib"
                                            )
-                    flist << createCopyTasks("#{nativeLibDir}",
-                                            "#{vendorBuildDir}/lib/Debug/glfw3dll.lib",
-                                            :basedir => "#{vendorBuildDir}/lib/Debug"
-                                           )
+
                 elsif(targetPlatform =~ /MacOS/)
-
+if false
                     flist = createCopyTasks("#{nativeLibDir}",
                                             "#{vendorBuildDir}/lib/libglfw*#{cfg.dllExt}",
                                             :basedir => "#{vendorBuildDir}/lib/Debug"
                                            )
-                end
 end
+                end
+
                 task pubTargs.addDependencies(flist); # add dependencies to :publicTargets
             end
 
-#            ifiles = addPublicIncludes("#{libSource}/include/GLFW/*.h",
-#                                       :destdir=> "GLFW" );
+            ifiles = addPublicIncludes("#{libSource}/png*.h",
+                                        :destdir=> "" );
 
-#            pubTargs.addDependencies(ifiles);
+            pubTargs.addDependencies(ifiles);
 
-if false
-            explibs = nil;
+            explibs = nil
             if(targetPlatform =~ /Windows/ )
-                 explibs = "#{nativeLibDir}/glfw3dll#{cfg.libExt}";
+                 explibs = "#{nativeLibDir}/libpng16d#{cfg.libExt}";
             elsif(targetPlatform =~ /MacOS/)
-                 explibs = "#{nativeLibDir}/libglfw#{cfg.dllExt}";
+#                 explibs = "#{nativeLibDir}/libglfw#{cfg.dllExt}";
             end
             cfg.addExportedLibs(explibs);
-end
         end
 
         export task :vendorLibs => [ :buildVendorLibs, :includes, :publicTargets ] do
