@@ -8,6 +8,7 @@ module Rakish
 
 	dependsList = [
 		'./oss-zlib',
+		'./oss-libpng\',
 		'./oss-glm',
 		'./oss-volk',
 		'./oss-glfw',
