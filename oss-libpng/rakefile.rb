@@ -3,7 +3,7 @@ require "#{myDir}/../build-options.rb"
 require "rakish/GitModule"
 
 depends=[
-#    "../oss-zlib"
+    "../oss-zlib"
 ]
 
 Rakish.Project(
@@ -48,7 +48,7 @@ Rakish.Project(
 
                 if(targetPlatform =~ /Windows/ )
 
-                    cmd = "#{cmakeCommand} -G -G \"#{cMakeGenerator}\"" -B \"#{vendorBuildDir}\""
+                    cmd = "#{cmakeCommand} -G \"#{cMakeGenerator}\" -B \"#{vendorBuildDir}\""
                     cmd += " \"-DBUILD_SHARED_LIBS=1\""
                     cmd += " \"-DGLFW_BUILD_TESTS=0\""
 

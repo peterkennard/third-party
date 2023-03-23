@@ -8,21 +8,24 @@ module Rakish
 
 	dependsList = [
 		'./oss-zlib',
-		'./oss-libpng\',
+		'./oss-libpng',
 		'./oss-glm',
 		'./oss-volk',
-		'./oss-glfw',
-	#	'./freetype'
+		'./oss-glfw'
 	];
 
 	if(cfg.targetPlatform =~ /MacOS/ )
+
         dependsList << './molten-vk';
         dependsList << './vulkan-sdk-macos';
+
 	elsif(cfg.targetPlatform =~ /Windows/ )
+
         dependsList << './vulkan-sdk-windows';
 	end
 
-log.debug("depends #{dependsList}");
+
+    log.debug("depends #{dependsList}");
 
 	Rakish.Project(:dependsUpon=>dependsList) do
 	end
