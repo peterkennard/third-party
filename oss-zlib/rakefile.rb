@@ -57,22 +57,22 @@ Rakish.Project(
                 flist = [];
                 if(targetPlatform =~ /Windows/)
 
-                    # we copy the release library and dll to the current bin and lib folder
-                    flist = createCopyTasks("#{buildDir}/bin/Debug",
-                                            "#{vendorBuildDir}/bin/Release/zlib*#{cfg.dllExt}",
-                                            :basedir => "#{vendorBuildDir}/bin/Release"
-                                            )
-                    flist = createCopyTasks("#{buildDir}/bin/Release",
-                                            "#{vendorBuildDir}/bin/Release/zlib*#{cfg.dllExt}",
-                                            :basedir => "#{vendorBuildDir}/bin/Release"
-                                            )
-                    flist << createCopyTasks("#{nativeLibDir}",
-                                            "#{vendorBuildDir}/lib/Release/zlib*#{cfg.libExt}",
-                                            :basedir => "#{vendorBuildDir}/lib/Release"
-                                           )
+                    # we copy the release library and dll to BOTH current bin and lib folder
+
+                    [ "Debug", "Release" ].each do |dest|
+
+                        flist << createCopyTasks("#{buildDir}/bin/#{dest}",
+                                                "#{vendorBuildDir}/bin/Release/zlib*#{cfg.dllExt}",
+                                                :basedir => "#{vendorBuildDir}/bin/Release"
+                                                )
+
+                        flist << createCopyTask("#{vendorBuildDir}/lib/Release/zlib#{cfg.libExt}",
+                                                "#{buildDir}/lib/#{dest}/zlib#{cfg.libExt}"
+                                               )
+                    end
 
                 elsif(targetPlatform =~ /MacOS/)
-                    flist = createCopyTasks("#{buildDir}",
+                    flist << createCopyTasks("#{buildDir}",
                                             "#{vendorBuildDir}/lib/Debug/libz*#{cfg.dllExt}",
                                             "#{vendorBuildDir}/lib/Release/libz*#{cfg.libExt}",
                                             :basedir => "#{vendorBuildDir}"
@@ -90,7 +90,7 @@ Rakish.Project(
 
             explibs = nil;
             if(targetPlatform =~ /Windows/ )
-                explibs = "#{nativeLibDir}/zlib.lib";
+                explibs = "#{buildDir}/bin/Release/zlib.lib";
             elsif(targetPlatform =~ /MacOS/)
                 explibs = "#{nativeLibDir}/libglfw#{cfg.dllExt}";
             end

@@ -90,6 +90,8 @@ Rakish.Project(
                                             "#{vendorBuildDir}/lib/Debug/libpng*.lib",
                                             :basedir => "#{vendorBuildDir}/lib"
                                            )
+                    # necessary - hope it works
+                    flist << createCopyTask("#{sourceSubdir}/scripts/pnglibconf.h.prebuilt", "#{buildIncludeDir()}/pnglibconf.h" );
 
                 elsif(targetPlatform =~ /MacOS/)
 if false
