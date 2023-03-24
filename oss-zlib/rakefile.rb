@@ -57,7 +57,7 @@ Rakish.Project(
                 flist = [];
                 if(targetPlatform =~ /Windows/)
 
-                    # we copy the release library and dll to BOTH current bin and lib folder
+                    # we copy the release library and dll to BOTH config outputs.
 
                     [ "Debug", "Release" ].each do |dest|
 
