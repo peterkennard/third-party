@@ -16,9 +16,14 @@ Rakish.Project(
     setSourceSubdir("#{projectDir}/zlib");
 
 	file sourceSubdir do |t|
+       if(targetPlatform =~ /Windows/)
 		# git.clone('https://github.com/emscripten-ports/zlib.git', t.name );
-		git.clone("git.livingwork.com:/home/didi/oss-vendor/zlib.git", t.name );
-		git.checkout("master", :dir=>t.name);
+    		git.clone("git.livingwork.com:/home/didi/oss-vendor/zlib.git", t.name );
+	    	git.checkout("master", :dir=>t.name);
+		#
+		else
+
+		end
 	end
 
     vendorBuildDir = ensureDirectoryTask("#{projectDir}/build");
@@ -27,35 +32,38 @@ Rakish.Project(
 
     setupCppConfig :targetType=>'DLL' do |cfg|
 
-       cfg.targetName = 'zlib';
-       cfg.cmakeExport = true;
+        cfg.targetName = 'zlib';
+        cfg.cmakeExport = true;
 
-       if(targetPlatform =~ /Windows/)
-       elsif(targetPlatform =~ /MacOS/)
-       end
+        if(targetPlatform =~ /Windows/)
+        elsif(targetPlatform =~ /MacOS/)
+        end
 
-       task :buildVendorLibs => [sourceSubdir] do |t|
+        task :buildVendorLibs => [sourceSubdir] do |t|
 
             FileUtils.mkdir_p(vendorBuildDir);  # make sure it is there
             FileUtils::cd(vendorBuildDir) do
-                cmd = "#{cmakeCommand} -G \"#{cMakeGenerator}\" -B \"#{vendorBuildDir}\""
-                cmd += " ..";
-                system(cmd);
+                if(targetPlatform =~ /Windows/)
+                    cmd = "#{cmakeCommand} -G \"#{cMakeGenerator}\" -B \"#{vendorBuildDir}\""
+                    cmd += " ..";
+                    system(cmd);
+                end
             end
 
             cfg.cmakeExport = true;
 
             FileUtils::cd(projectDir) do
 
-                cmd = "#{cmakeCommand} --build build --config RELEASE";
-                system(cmd);
-                cmd = "#{cmakeCommand} --build build --config DEBUG";
-                system(cmd);
 
                 # list of files to copy to main build lib and bin areas
 
                 flist = [];
                 if(targetPlatform =~ /Windows/)
+
+                    cmd = "#{cmakeCommand} --build build --config RELEASE";
+                    system(cmd);
+                    cmd = "#{cmakeCommand} --build build --config DEBUG";
+                    system(cmd);
 
                     # we copy the release library and dll to BOTH config outputs.
 
@@ -72,27 +80,28 @@ Rakish.Project(
                     end
 
                 elsif(targetPlatform =~ /MacOS/)
-                    flist << createCopyTasks("#{buildDir}",
-                                            "#{vendorBuildDir}/lib/Debug/libz*#{cfg.dllExt}",
-                                            "#{vendorBuildDir}/lib/Release/libz*#{cfg.libExt}",
-                                            :basedir => "#{vendorBuildDir}"
-                                            )
+#                     flist << createCopyTasks("#{buildDir}",
+#                                             "#{vendorBuildDir}/lib/Debug/libz*#{cfg.dllExt}",
+#                                             "#{vendorBuildDir}/lib/Release/libz*#{cfg.libExt}",
+#                                             :basedir => "#{vendorBuildDir}"
+#                                             )
                 end
 
                 task pubTargs.addDependencies(flist); # add dependencies to :publicTargets
             end
 
-            incfiles = addPublicIncludes(
-                "#{vendorBuildDir}/zlib/*.h",
-                "#{sourceSubdir}/zlib.h"
-            );
-            pubTargs.addDependencies(incfiles);
+            explibs = [];
 
-            explibs = nil;
-            if(targetPlatform =~ /Windows/ )
+            if(targetPlatform =~ /Windows/)
+                incfiles = addPublicIncludes(
+                    "#{vendorBuildDir}/zlib/*.h",
+                    "#{sourceSubdir}/zlib.h"
+                );
+                pubTargs.addDependencies(incfiles);
+
                 explibs = "#{buildDir}/bin/Release/zlib.lib";
             elsif(targetPlatform =~ /MacOS/)
-                explibs = "#{nativeLibDir}/libglfw#{cfg.dllExt}";
+                # explibs = "#{nativeLibDir}/libglfw#{cfg.dllExt}";
             end
             cfg.addExportedLibs(explibs);
         end

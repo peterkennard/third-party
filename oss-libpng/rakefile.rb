@@ -17,9 +17,14 @@ Rakish.Project(
     setSourceSubdir(libSource);
 
 	file libSource do |t|
-	    # git.clone("https://github.com/glennrp/libpng.git", t.name );
-        git.clone('https://github.com/emscripten-ports/libpng.git', t.name );
-	    git.checkout("libpng16", :dir=>libSource );
+
+        if(targetPlatform =~ /Windows/ )
+            git.clone('https://github.com/emscripten-ports/libpng.git', t.name );
+            git.checkout("libpng16", :dir=>libSource );
+        elsif(targetPlatform =~ /MacOS/)
+            # git.clone("https://github.com/glennrp/libpng.git", t.name );
+            # git.checkout("libpng16", :dir=>libSource );
+        end
 	end
 
     vendorBuildDir = ensureDirectoryTask("#{projectDir}/build");
@@ -28,13 +33,13 @@ Rakish.Project(
 
     export task :cleanAll => sourceSubdir do |t|
         FileUtils.rm_rf(vendorBuildDir);  # remove recursive
-        FileUtils.cd sourceSubdir do
-            system('git reset --hard');  # Maybe delete and re-download - though a bit slow
-        end
+#         FileUtils.cd sourceSubdir do
+#             system('git reset --hard');  # Maybe delete and re-download - though a bit slow
+#         end
     end
 
     setupCppConfig :targetType=>'DLL' do |cfg|
-        cfg.targetName = 'glfw';
+        cfg.targetName = 'libpng';
 
         pubTargs = task :publicTargets;
 
@@ -53,28 +58,32 @@ Rakish.Project(
                     cmd += " \"-DZLIB_LIBRARY=#{buildDir}/lib/Debug/zlib.lib\""
                     cmd += " \"-DZLIB_INCLUDE_DIR=#{buildDir}/include\""
 
+                    cmd += " .."
+                    system(cmd);
+
                  elsif(targetPlatform =~ /MacOS/)
 
-                    cmd = "#{cmakeCommand} -G \"Unix Makefiles\""
-                    cmd += " \"-DBUILD_SHARED_LIBS=1\""
-                    cmd += " \"-DGLFW_BUILD_TESTS=0\""
-                    cmd += " \"-DGLFW_BUILD_DOCS=0\""
-                    cmd += " \"-DGLFW_INSTALL=0\""
-
+#                     cmd = "#{cmakeCommand} -G \"#{cMakeGenerator}\" -B \"#{vendorBuildDir}\""
+#                     # cmd = "#{cmakeCommand} -G \"Unix Makefiles\" -B \"#{vendorBuildDir}\""
+#                     cmd += " \"-DPNG_SHARED=1\""
+#                     cmd += " \"-DPNG_STATIC=1\""
+#                     cmd += " \"-DPNG_FRAMEWORK=1\""
+#                     cmd += " \"-DPNG_EXECUTABLES=0\""
+#                     cmd += " \"-DPNG_TESTS=0\""
+#                     cmd += " \"-DPNG_DEBUG=0\""
+#                     cmd += " \"-DPNG_HARDWARE_OPTIMIZATIONS=0\""
                 end
-                cmd += " .."
-                system(cmd);
             end
 
             FileUtils::cd(projectDir) do
-
-                cmd = "#{cmakeCommand} --build build --config RELEASE";
-                system(cmd);
 
                 # list of files to copy to main build lib and bin areas
                 flist = [];
 
                 if(targetPlatform =~ /Windows/ )
+
+                    cmd = "#{cmakeCommand} --build build --config RELEASE";
+                    system(cmd);
 
                     cmd = "#{cmakeCommand} --build build --config DEBUG";
                     system(cmd);
@@ -94,27 +103,27 @@ Rakish.Project(
                     flist << createCopyTask("#{sourceSubdir}/scripts/pnglibconf.h.prebuilt", "#{buildIncludeDir()}/pnglibconf.h" );
 
                 elsif(targetPlatform =~ /MacOS/)
-if false
-                    flist = createCopyTasks("#{nativeLibDir}",
-                                            "#{vendorBuildDir}/lib/libglfw*#{cfg.dllExt}",
-                                            :basedir => "#{vendorBuildDir}/lib/Debug"
-                                           )
-end
+
+#                    flist = createCopyTasks("#{nativeLibDir}",
+#                                            "#{vendorBuildDir}/libpng/libpng#{cfg.dllExt}",
+#                                            :basedir => "#{vendorBuildDir}/libpng"
+#                                           )
+#                    flist << createCopyTask("#{sourceSubdir}/scripts/pnglibconf.h.prebuilt", "#{buildIncludeDir()}/pnglibconf.h" );
                 end
 
                 task pubTargs.addDependencies(flist); # add dependencies to :publicTargets
             end
 
-            ifiles = addPublicIncludes("#{libSource}/png*.h",
-                                        :destdir=> "" );
-
-            pubTargs.addDependencies(ifiles);
-
             explibs = nil
-            if(targetPlatform =~ /Windows/ )
-                 explibs = "#{nativeLibDir}/libpng16d#{cfg.libExt}";
+            if(targetPlatform =~ /Windows/)
+
+                ifiles = addPublicIncludes("#{libSource}/png*.h",
+                                            :destdir=> "" );
+
+                pubTargs.addDependencies(ifiles);
+                explibs = "#{nativeLibDir}/libpng16d#{cfg.libExt}";
             elsif(targetPlatform =~ /MacOS/)
-#                 explibs = "#{nativeLibDir}/libglfw#{cfg.dllExt}";
+                explibs = "/opt/homebrew/lib/libpng.dylib";
             end
             cfg.addExportedLibs(explibs);
         end
