@@ -11,6 +11,7 @@ module Rakish
 		'./oss-libpng',
 		'./oss-glm',
 		'./oss-volk',
+		'./vk-spirv-reflect',
 		'./oss-glfw'
 	];
 
@@ -22,7 +23,6 @@ module Rakish
 	elsif(cfg.targetPlatform =~ /Windows/ )
 
         dependsList << './vulkan-sdk-windows';
-		dependsList << './vk-spirv-reflect';
 	end
 
 
