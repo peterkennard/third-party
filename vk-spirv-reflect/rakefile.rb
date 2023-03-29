@@ -86,7 +86,6 @@ Rakish.Project(
                                             :basedir => "#{vendorBuildDir}/lib"
                                            )
                 end
-                log.debug("###################### #{flist}" )
 
                 task pubTargs.addDependencies(flist); # add dependencies to :publicTargets
             end
