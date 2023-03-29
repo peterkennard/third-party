@@ -73,11 +73,20 @@ Rakish.Project(
                                         :basedir => "#{vendorBuildDir}/bin"
                                        )
 
-                flist << createCopyTasks("#{buildDir}/lib",
-                                        "#{vendorBuildDir}/lib/Release/spirv-reflect-*",
-                                        "#{vendorBuildDir}/lib/Debug/spirv-reflect-*",
-                                        :basedir => "#{vendorBuildDir}/lib"
-                                       )
+                if(targetPlatform =~ /Windows/ )
+                    flist << createCopyTasks("#{buildDir}/lib",
+                                            "#{vendorBuildDir}/lib/Release/spirv-reflect-*",
+                                            "#{vendorBuildDir}/lib/Debug/spirv-reflect-*",
+                                            :basedir => "#{vendorBuildDir}/lib"
+                                           )
+                elsif(targetPlatform =~ /MacOS/)
+                    flist << createCopyTasks("#{buildDir}/lib",
+                                            "#{vendorBuildDir}/lib/Release/libspirv-reflect-*",
+                                            "#{vendorBuildDir}/lib/Debug/libspirv-reflect-*",
+                                            :basedir => "#{vendorBuildDir}/lib"
+                                           )
+                end
+                log.debug("###################### #{flist}" )
 
                 task pubTargs.addDependencies(flist); # add dependencies to :publicTargets
             end
@@ -90,10 +99,14 @@ Rakish.Project(
 
             pubTargs.addDependencies(ifiles);
 
-            explibs = "#{buildDir}/lib/Debug/spirv-reflect-static#{cfg.libExt}";
+            explibs = []
+            if(targetPlatform =~ /Windows/ )
+                explibs << "#{buildDir}/lib/Debug/spirv-reflect-static#{cfg.libExt}";
+            elsif(targetPlatform =~ /MacOS/)
+                explibs << "#{buildDir}/lib/Debug/libspirv-reflect-static#{cfg.libExt}";
+            end
 
             cfg.addExportedLibs(explibs);
-
         end
 
         export task :vendorLibs => [ :buildVendorLibs, :includes, :publicTargets, "#{projectDir}/CMakeExports.raked" ] do
