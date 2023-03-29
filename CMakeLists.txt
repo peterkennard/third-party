@@ -11,6 +11,7 @@ add_subdirectory("./oss-glfw")
 
 if(WIN32)
     add_subdirectory ("./vulkan-sdk-windows")
+    add_subdirectory ("./vk-spirv-reflect")
 elseif(APPLE)
     add_subdirectory ("./vulkan-sdk-macos")
 endif()
