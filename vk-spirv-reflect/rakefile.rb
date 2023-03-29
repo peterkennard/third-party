@@ -40,12 +40,17 @@ Rakish.Project(
             FileUtils::cd(vendorBuildDir) do
                 cmd = nil;
                 cmd = "#{cmakeCommand} -G \"#{cMakeGenerator}\" -B \"#{vendorBuildDir}\""
-                cmd += " \"-DSPIRV_REFLECT_EXECUTABLE=ON\""        #   "Build spirv-reflect executable" ON)
                 cmd += " \"-DSPIRV_REFLECT_EXAMPLES=OFF\""         #   "Build stripper examples" ON)
                 cmd += " \"-DSPIRV_REFLECT_STRIPPER=OFF\""         #   "Build stripper utility" OFF)
                 cmd += " \"-DSPIRV_REFLECT_STATIC_LIB=ON\""        #   "Build a SPIRV-Reflect static library" OFF)
                 cmd += " \"-DSPIRV_REFLECT_BUILD_TESTS=OFF\""      #    "Build the SPIRV-Reflect test suite" OFF)
                 cmd += " \"-DSPIRV_REFLECT_ENABLE_ASSERTS=OFF\""   # "Enable asserts for debugging" OFF)
+
+                if(targetPlatform =~ /Windows/ )
+                    cmd += " \"-DSPIRV_REFLECT_EXECUTABLE=ON\""        #   "Build spirv-reflect executable" ON)
+                elsif(targetPlatform =~ /MacOS/)
+                    cmd += " \"-DSPIRV_REFLECT_EXECUTABLE=OFF\""        #   "Build spirv-reflect executable" ON)
+                end
                 cmd += " ..";
                 system(cmd);
             end
@@ -83,11 +88,7 @@ Rakish.Project(
 
             pubTargs.addDependencies(ifiles);
 
-            explibs = []
-            if(targetPlatform =~ /Windows/)
-                explibs = "#{buildDir}/lib/Debug/spirv-reflect-static.lib";
-            elsif(targetPlatform =~ /MacOS/)
-            end
+            explibs = "#{buildDir}/lib/Debug/spirv-reflect-static#{cfg.libExt}";
 
             cfg.addExportedLibs(explibs);
 
