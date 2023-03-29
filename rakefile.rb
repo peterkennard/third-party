@@ -12,7 +12,6 @@ module Rakish
 		'./oss-glm',
 		'./oss-volk',
 		'./oss-glfw'
-		'./vk-spirv-reflect'
 	];
 
 	if(cfg.targetPlatform =~ /MacOS/ )
@@ -23,7 +22,7 @@ module Rakish
 	elsif(cfg.targetPlatform =~ /Windows/ )
 
         dependsList << './vulkan-sdk-windows';
-		dependsList << './vk-spirv-reflect'
+		dependsList << './vk-spirv-reflect';
 	end
 
 
