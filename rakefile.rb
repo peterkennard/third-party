@@ -4,8 +4,10 @@ require "#{myDir}/../build-options.rb"
 
 module Rakish
 
-	cfg = BuildConfig("root");
+dependsList=[]
+unless (ARGV.length > 0 && (ARGV[0] =~ /setup/))
 
+	cfg = BuildConfig("root");
 	dependsList = [
 		'./oss-zlib',
 		'./oss-libpng',
@@ -26,6 +28,7 @@ module Rakish
 
 
     log.debug("depends #{dependsList}");
+end
 
 	Rakish.Project(:dependsUpon=>dependsList) do
 	end
