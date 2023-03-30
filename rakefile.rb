@@ -10,7 +10,6 @@ module Rakish
 		'./oss-zlib',
 		'./oss-libpng',
 		'./oss-glm',
-		'./oss-volk',
 		'./vk-spirv-reflect',
 		'./oss-glfw'
 	];
