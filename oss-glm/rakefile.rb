@@ -41,7 +41,9 @@ Rakish.Project(
                                             :baseDir => sourceSubdir                                            );
     end
 
-    task :includes => [ sourceSubdir, ifiles ] do
+    log.debug(" ########################################## #{ifiles}");
+
+    export task :includes => [ sourceSubdir, ifiles ] do
     end
 
     export task :vendorLibs => [ sourceSubdir, :includes ] do
