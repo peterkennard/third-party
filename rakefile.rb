@@ -31,6 +31,8 @@ unless (ARGV.length > 0 && (ARGV[0] =~ /setup/))
 end
 
 	Rakish.Project(:dependsUpon=>dependsList) do
+	    export task :setup do 
+	    end
 	end
 
 end
