@@ -14,37 +14,45 @@ Rakish.Project(
 
     setSourceSubdir("#{projectDir}/glm");
 
+    pubTargs = task :publicTargets;
+
+
 	file sourceSubdir do |t|
 		git.clone('https://github.com/g-truc/glm.git', t.name );
 	end
 
-    vendorBuildDir = ensureDirectoryTask("#{projectDir}/build");
-
-    pubTargs = task :publicTargets;
-
-    glmDirs = [
-        '.',
-        'detail',
-        'ext',
-        'gtc',
-        'gtx',
-        'gtx',
-        'simd'
-    ];
-
-    ifiles = [];
-
-    glmDirs.each do |dir|
-        ifiles << createCopyTasks("#{buildDir}/include/glm/#{dir}",
-                                            "#{sourceSubdir}/glm/#{dir}/*.*",
-                                            :baseDir => sourceSubdir                                            );
+    iTask = task :includes => [ sourceSubdir ] do
     end
 
-    export task :includes => [ sourceSubdir, ifiles ] do
+    task :includeDependencies do
+
+        glmDirs = [
+            '.',
+            'detail',
+            'ext',
+            'gtc',
+            'gtx',
+            'gtx',
+            'simd'
+        ];
+
+        ifiles = [];
+
+        glmDirs.each do |dir|
+            ifiles << createCopyTasks("#{buildDir}/include/glm/#{dir}",
+                                                "#{sourceSubdir}/glm/#{dir}/*.*",
+                                                :baseDir => sourceSubdir                                            );
+        end
+        iTask.addDependencies(ifiles)
+
     end
 
-    export task :vendorLibs => [ sourceSubdir, :includes ] do
+    # note when dependencies are added to the end of the list they happen AFTER the prior task
+    # this is to ensure the sourceSubdir is downloaded first before the dependencies are created.
+    export task :vendorLibs => [ sourceSubdir, :includeDependencies, :includes ] do
     end
+
+    export task :genProject => :vendorLibs
 
     export task :cleanAll => sourceSubdir do |t|
         FileUtils.rm_rf("#{buildDir}/include/glm");  # remove recursive
