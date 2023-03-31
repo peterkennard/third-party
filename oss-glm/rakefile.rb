@@ -16,7 +16,6 @@ Rakish.Project(
 
 	file sourceSubdir do |t|
 		git.clone('https://github.com/g-truc/glm.git', t.name );
-		# git.checkout("master", :dir=>t.name);
 	end
 
     vendorBuildDir = ensureDirectoryTask("#{projectDir}/build");
@@ -40,8 +39,6 @@ Rakish.Project(
                                             "#{sourceSubdir}/glm/#{dir}/*.*",
                                             :baseDir => sourceSubdir                                            );
     end
-
-    log.debug(" ########################################## #{ifiles}");
 
     export task :includes => [ sourceSubdir, ifiles ] do
     end
