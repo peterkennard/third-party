@@ -4,31 +4,32 @@ require "#{myDir}/../build-options.rb"
 
 module Rakish
 
-dependsList=[]
-unless (ARGV.length > 0 && (ARGV[0] =~ /setup/))
+    dependsList=[]
 
-	cfg = BuildConfig("root");
-	dependsList = [
-		'./oss-zlib',
-		'./oss-libpng',
-		'./oss-glm',
-		'./vk-spirv-reflect',
-		'./oss-glfw'
-	];
+    unless inSetupTask()
 
-	if(cfg.targetPlatform =~ /MacOS/ )
+        cfg = BuildConfig("root");
+        dependsList = [
+            './oss-zlib',
+            './oss-libpng',
+            './oss-glm',
+            './vk-spirv-reflect',
+            './oss-glfw'
+        ];
 
-        dependsList << './molten-vk';
-        dependsList << './vulkan-sdk-macos';
+        if(cfg.targetPlatform =~ /MacOS/ )
 
-	elsif(cfg.targetPlatform =~ /Windows/ )
+            dependsList << './molten-vk';
+            dependsList << './vulkan-sdk-macos';
 
-        dependsList << './vulkan-sdk-windows';
-	end
+        elsif(cfg.targetPlatform =~ /Windows/ )
+
+            dependsList << './vulkan-sdk-windows';
+        end
 
 
-    log.debug("depends #{dependsList}");
-end
+        log.debug("depends #{dependsList}");
+    end
 
 	Rakish.Project(:dependsUpon=>dependsList) do
 	    export task :setup do 
