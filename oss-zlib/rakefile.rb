@@ -111,9 +111,11 @@ Rakish.Project(
     end
 
     export task :cleanAll => sourceSubdir do |t|
-        FileUtils.rm_rf(vendorBuildDir);  # remove recursive
-        FileUtils.cd sourceSubdir do
-            system('git reset --hard');  # Maybe delete and re-download - though a bit slow
+        FileUtils.rm_rf(vendorBuildDir);  # remove recursive if present
+        if(File.directory?(sourceSubdir))
+            FileUtils.cd sourceSubdir do
+                system('git reset --hard');  # Maybe delete and re-download - though a bit slow
+            end
         end
     end
 
