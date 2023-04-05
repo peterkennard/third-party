@@ -7,7 +7,6 @@ depends=[
 
 Rakish.Project(
     :includes=>[Rakish::CppProjectModule, Rakish::GitModule ],
-    :id         => "1AB1C320-9110-4A2A-B191-525213903EA2",
 	:name 		=> "oss-glm",
 	:dependsUpon => [ depends ]
 ) do
