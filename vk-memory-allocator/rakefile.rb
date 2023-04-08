@@ -13,26 +13,22 @@ Rakish.Project(
 
     setSourceSubdir("#{projectDir}/vk-allocator");
 
-    pubTargs = task :publicIncludes;
-
 	file sourceSubdir do |t|
 		git.clone('https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator.git', t.name );
 	end
 
+    pubIncs = task :publicIncludes;
+
     task :includeDependencies do
         ifiles = addPublicIncludes("#{sourceSubdir}/include/*.h");
-        pubTargs.addDependencies(ifiles)
+        pubIncs.addDependencies(ifiles)
     end
 
-    export task :includes => [ :includeDependencies, pubTargs ];
-
-    export task :vendorLibs => [ sourceSubdir, :includes ] do
-    end
-
-    export task :genProject => :vendorLibs
+    export task :includes => [ :includeDependencies, pubIncs ];
+    export task :vendorLibs => [ sourceSubdir, :includes ];
+    export task :genProject => :vendorLibs;
 
     export task :cleanAll => sourceSubdir do |t|
-        # FileUtils.rm_rf("#{buildDir}/include/glm");  # remove recursive
         FileUtils.cd sourceSubdir do
             system('git reset --hard');  # Maybe delete and re-download - though a bit slow
         end
