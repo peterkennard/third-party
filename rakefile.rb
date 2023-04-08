@@ -13,7 +13,8 @@ module Rakish
             './oss-zlib',
             './oss-libpng',
             './oss-glm',
-            './vk-spirv-reflect',
+        #    './vk-spirv-reflect',
+        #    './vk-memory-allocator',
             './oss-glfw'
         ];
 
