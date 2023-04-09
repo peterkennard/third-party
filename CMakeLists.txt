@@ -10,11 +10,4 @@ add_subdirectory ("./oss-libpng")
 add_subdirectory("./oss-glfw")
 add_subdirectory ("./vk-spirv-reflect")
 
-if(WIN32)
-    add_subdirectory ("./vulkan-sdk-windows")
-elseif(APPLE)
-    add_subdirectory ("./vulkan-sdk-macos")
-endif()
-
-
 # add_subdirectory ("./freetype")

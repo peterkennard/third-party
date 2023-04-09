@@ -13,19 +13,12 @@ module Rakish
             './oss-zlib',
             './oss-libpng',
             './oss-glm',
-        #    './vk-spirv-reflect',
-        #    './vk-memory-allocator',
             './oss-glfw'
         ];
 
         if(cfg.targetPlatform =~ /MacOS/ )
-
             dependsList << './molten-vk';
-            dependsList << './vulkan-sdk-macos';
-
         elsif(cfg.targetPlatform =~ /Windows/ )
-
-            dependsList << './vulkan-sdk-windows';
         end
 
 
