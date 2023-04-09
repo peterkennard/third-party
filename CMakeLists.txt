@@ -7,7 +7,7 @@ project ("third-party")
 
 add_subdirectory ("./oss-zlib")
 add_subdirectory ("./oss-libpng")
-add_subdirectory("./oss-glfw")
+add_subdirectory ("./oss-glfw")
 add_subdirectory ("./vk-spirv-reflect")
 
 # add_subdirectory ("./freetype")
