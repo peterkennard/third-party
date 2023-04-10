@@ -13,8 +13,13 @@ Rakish.Project(
 
 	setSourceSubdir("#{projectDir}/Vulkan-Samples");
 
+
+    source2 = file "#{projectName}/vulkan-guide" do |t|
+	    git.clone("https://github.com/vblanco20-1/vulkan-guide.git", t.name );
+	end
+
 	file sourceSubdir do |t|
-	    git.clone("https://github.com/KhronosGroup/Vulkan-Samples.git", t.name );
+	    git.clone("https://github.com/KhronosGroup/Vulkan-Samples.git", t.name, :args=>"--recurse-submodules" );
 	end
 
     vendorBuildDir = ensureDirectoryTask("#{projectDir}/build");
@@ -39,24 +44,61 @@ Rakish.Project(
 
         task :buildVendorLibs => [sourceSubdir] do |t|
             FileUtils.mkdir_p(vendorBuildDir);  # make sure it is there
-            FileUtils::cd(vendorBuildDir) do
+
+            FileUtils::cd(sourceSubdir) do
 
                 cmd = nil;
 
+                #     VKB_<sample_name>
+                #     Choose whether to include a sample at build time.
+                #
+                #     ON - Build Sample
+                #     OFF - Exclude Sample
+                #     Default: ON
+                #
+                #     VKB_BUILD_SAMPLES
+                #     Choose whether to build the samples.
+                #
+                #     ON - Build All Samples
+                #     OFF - Skip building Samples
+                #     Default: ON
+                #
+                #     VKB_BUILD_TESTS
+                #     Choose whether to build the tests
+                #
+                #     ON - Build All Tests
+                #     OFF - Skip building Tests
+                #     Default: OFF
+                #
+                #     VKB_VALIDATION_LAYERS
+                #     Enable Validation Layers
+                #
+                #     Default: OFF
+                #
+                #     VKB_VALIDATION_LAYERS_GPU_ASSISTED
+                #     Enable GPU assisted Validation Layers, used primarily for VK_EXT_descriptor_indexing.
+                #
+                #     Default: OFF
+                #
+                #     VKB_VULKAN_DEBUG
+                #     Enable VK_EXT_debug_utils or VK_EXT_debug_marker, if supported. This enables debug names for Vulkan objects, and markers/labels in command buffers.
+                #     See the debug utils sample for more information.
+                #
+                #     Default: ON
+                #
+                #     VKB_WARNINGS_AS_ERRORS
+                #     Treat all warnings as errors
+                #
+                #     Default: ON
+
+
                 if(targetPlatform =~ /Windows/ )
-                    cmd = "#{cmakeCommand} -G \"Visual Studio 16 2019\""
-                    cmd += " \"-DBUILD_SHARED_LIBS=1\""
-                    cmd += " \"-DGLFW_BUILD_TESTS=0\""
-                    cmd += " \"-DGLFW_BUILD_DOCS=0\""
-                    cmd += " \"-DGLFW_INSTALL=0\""
+#                    cmd = "\"#{cmakeCommand}\" -G\"Visual Studio 16 2019\" -S\"#{sourceSubdir}\" \"-B#{sourceSubdir}/build/windows\"";
+                    cmd = "\"#{cmakeCommand}\" -G\"Visual Studio 16 2019\" -A x64 -S\"#{sourceSubdir}\" \"-B#{sourceSubdir}/build/windows\"";
                 elsif(targetPlatform =~ /MacOS/)
-                    cmd = "#{cmakeCommand} -G \"Unix Makefiles\""
-                    cmd += " \"-DBUILD_SHARED_LIBS=1\""
-                    cmd += " \"-DGLFW_BUILD_TESTS=0\""
-                    cmd += " \"-DGLFW_BUILD_DOCS=0\""
-                    cmd += " \"-DGLFW_INSTALL=0\""
                 end
-                cmd += " .."
+                log.debug("##### \"\n#{cmd}\"\n");
+                # cmd += " .."
                 system(cmd);
             end
 
@@ -110,7 +152,10 @@ Rakish.Project(
 
         end
 
-        export task :vendorLibs => [ sourceSubdir ] do # :buildVendorLibs, :includes, :publicTargets ] do
+        export task :genProject => [ sourceSubdir, :buildVendorLibs ] do
+        end
+
+        export task :vendorLibs => [ source2, sourceSubdir ] do
         end
     end
 
