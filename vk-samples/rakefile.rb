@@ -13,11 +13,6 @@ Rakish.Project(
 
 	setSourceSubdir("#{projectDir}/Vulkan-Samples");
 
-
-    source2 = file "#{projectName}/vulkan-guide" do |t|
-	    git.clone("https://github.com/vblanco20-1/vulkan-guide.git", t.name );
-	end
-
 	file sourceSubdir do |t|
 	    git.clone("https://github.com/KhronosGroup/Vulkan-Samples.git", t.name, :args=>"--recurse-submodules" );
 	end
@@ -153,6 +148,12 @@ Rakish.Project(
         end
 
         export task :genProject => [ sourceSubdir, :buildVendorLibs ] do
+        end
+
+        source2 = "#{projectName}/vulkan-guide";
+
+        file source2 do |t|
+            git.clone("https://github.com/vblanco20-1/vulkan-guide.git", t.name );
         end
 
         export task :vendorLibs => [ source2, sourceSubdir ] do
