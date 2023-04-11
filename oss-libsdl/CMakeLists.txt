@@ -10,9 +10,4 @@ if( PROJECT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
     add_subdirectory ("./SDL2")
 else()
     include ("./CMakeExports.raked")
-
-
-#    set_target_properties(oss-libsdl PROPERTIES
-#      INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
-#    )
 endif()

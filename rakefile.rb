@@ -13,7 +13,8 @@ module Rakish
             './oss-zlib',
             './oss-libpng',
             './oss-glm',
-            './oss-glfw'
+            './oss-glfw',
+            './oss-stb'
         ];
 
         if(cfg.targetPlatform =~ /MacOS/ )

@@ -96,11 +96,10 @@ Rakish.Project(
 #                                             :destdir=> "" );
 #
 #                 pubTargs.addDependencies(ifiles);
-                explibs = "#{nativeLibDir}/SDL3#{cfg.libExt}";
+                explibs = "#{vendorBuildDir}/lib/Debug/SDL3.lib";
             elsif(targetPlatform =~ /MacOS/)
 #                 explibs = "/opt/homebrew/lib/libpng.dylib";
             end
-            log.debug("############# #{explibs}");
             cfg.addExportedLibs(explibs);
         end
 
