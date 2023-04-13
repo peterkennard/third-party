@@ -14,7 +14,8 @@ module Rakish
             './oss-libpng',
             './oss-glm',
             './oss-glfw',
-            './oss-stb'
+            './oss-stb',
+            './tinyobjloader'
         ];
 
         if(cfg.targetPlatform =~ /MacOS/ )
