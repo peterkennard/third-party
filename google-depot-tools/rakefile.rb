@@ -22,9 +22,8 @@ Rakish.Project(
     
 	file libSource do |t|
         if(targetPlatform =~ /Windows/ )
-  #          FileUtils.mkdir_p(t.name);  # make sure it is there
             system("curl \"https://storage.googleapis.com/chrome-infra/depot_tools.zip\" -o dptools.zip");
-            system("unzip dptools.zip -d #{t.name}");
+            system("unzip -q dptools.zip -d #{t.name}");
         elsif(targetPlatform =~ /MacOS/)
 	        git.clone("https://chromium.googlesource.com/chromium/tools/depot_tools.git", t.name );
         end
