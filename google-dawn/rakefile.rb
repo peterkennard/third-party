@@ -4,6 +4,7 @@ require "#{myDir}/../build-options.rb"
 require "rakish/GitModule"
 
 depends=[
+    "../google-depot-tools"
 ]
 
 Rakish.Project(
