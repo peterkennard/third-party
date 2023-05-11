@@ -21,12 +21,12 @@ Rakish.Project(
     # https://dawn.googlesource.com/dawn/+/refs/heads/chromium-gpu-experimental/README.md
     
 	file libSource do |t|
-        if(targetPlatform =~ /Windows/ )
-            system("curl \"https://storage.googleapis.com/chrome-infra/depot_tools.zip\" -o dptools.zip");
-            system("unzip -q dptools.zip -d #{t.name}");
-        elsif(targetPlatform =~ /MacOS/)
+#        if(targetPlatform =~ /Windows/ )
+#            system("curl \"https://storage.googleapis.com/chrome-infra/depot_tools.zip\" -o dptools.zip");
+#            system("unzip -q dptools.zip -d #{t.name}");
+#        elsif(targetPlatform =~ /MacOS/)
 	        git.clone("https://chromium.googlesource.com/chromium/tools/depot_tools.git", t.name );
-        end
+#        end
 	end
 
     export task :vendorLibs => [ libSource ] do |t|
