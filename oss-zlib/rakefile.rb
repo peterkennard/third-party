@@ -44,10 +44,10 @@ Rakish.Project(
             FileUtils.mkdir_p(vendorBuildDir);  # make sure it is there
             FileUtils::cd(vendorBuildDir) do
                 if(targetPlatform =~ /Windows/)
-                    cmd = "#{cmakeCommand} -G \"#{cMakeGenerator}\" -B \"#{vendorBuildDir}\""
-                    cmd += " ..";
-                    system(cmd);
-                end
+                     cmd = "#{cmakeCommand} -G \"#{cMakeGenerator}\" -B \"#{vendorBuildDir}\""
+                     cmd += " ..";
+                     system(cmd);
+                 end
             end
 
             cfg.cmakeExport = true;
