@@ -1,4 +1,5 @@
 dawn-dist
+dawn-dist/**/*
 build
 *.raked
 CMakeLists.txt
