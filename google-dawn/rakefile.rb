@@ -16,15 +16,14 @@ Rakish.Project(
 
     tools_path = File.expand_path("../google-depot-tools/depot_tools");
 
-    opath = ENV['PATH'];
-    ENV['PATH'] = "#{tools_path}#{pathSeparator}#{opath}";
-
 	libSource = "#{projectDir}/dawn";
 
     vendorBuildDir = ensureDirectoryTask("#{projectDir}/build");
     setSourceSubdir(libSource);
 
     # readme on building
+    # https://github.com/cwoffenden/hello-webgpu/blob/main/lib/README.md
+
     # https://dawn.googlesource.com/dawn/+/refs/heads/chromium-gpu-experimental/README.md
 
 	file libSource do |t|
@@ -43,24 +42,34 @@ Rakish.Project(
 
        task :buildVendorLibs => [libSource] do |t|
 
-            FileUtils::mkdir_p(vendorBuildDir);  # make sure it is there
+            opath = ENV['PATH'];
+            begin
+                ENV['PATH'] = "#{tools_path}#{pathSeparator}#{opath}";
+                ENV['DEPOT_TOOLS_WIN_TOOLCHAIN']="0";
+                ENV['DEPOT_TOOLS_UPDATE']="1";
 
-            FileUtils.cd(libSource) do
+                FileUtils::mkdir_p(vendorBuildDir);  # make sure it is there
 
-               log.debug("############# now in #{libSource}");
+                FileUtils.cd(libSource) do
 
-                # to do make this a dependency task ? ".gclient" ?
+                    # to do make this a dependency task ? ".gclient" ?
 
-                system( "cp ./scripts/standalone.gclient .gclient" );
-                system( "gclient sync");
+                    system( "cp ./scripts/standalone.gclient .gclient" );
+                    system( "bash -c \"gclient sync\"");
+                    system("bash -c \"gclient sync\"");
+                    system("bash -c \"gn args out/Release\"");
 
-                log.debug("############# building with make");
-                FileUtils::mkdir_p("out/debug");
+                    FileUtils::mkdir_p("out/Release");
+                    system("bash -c \"ninja -C out/Release src/dawn/native:shared src/dawn/platform:shared proc_shared webgpu_dawn\"");
 
-                FileUtils.cd("out/debug") do
-                    system("cmake ../..");
-                    system("make");  # -j N for N-way parallel
+                  #  FileUtils.cd("out/Release") do
+                  #      system("cmake ../..");
+                  #      system("make");  # -j N for N-way parallel
+                  #  end
                 end
+            rescue
+                ENV['DEPOT_TOOLS_WIN_TOOLCHAIN']="";
+                ENV['PATH'] = opath;
             end
         end
 
