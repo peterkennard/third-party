@@ -22,7 +22,7 @@ Rakish.Project(
     setSourceSubdir(libSource);
 
     # readme on building
-    # https://github.com/cwoffenden/hello-webgpu/blob/main/lib/README.md
+    # https://github.com/eliemichel/LearnWebGPU
 
 	file libSource do |t|
 	    git.clone("https://github.com/eliemichel/WebGPU-distribution.git", t.name );
