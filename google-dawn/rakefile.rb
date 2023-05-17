@@ -74,6 +74,8 @@ Rakish.Project(
                 );
                 pubTargs.addDependencies(incfiles);
 
+                cfg.addExportedLibs("#{vendorBuildDir}/lib/Release/*.lib");
+
             end
         end
 
