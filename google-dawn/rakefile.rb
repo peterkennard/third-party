@@ -65,12 +65,21 @@ Rakish.Project(
 
             if(targetPlatform =~ /Windows/)
                 incfiles = addPublicIncludes(
+                   "#{vendorBuildDir}/_deps/dawn-build/gen/include/dawn/*.h",
                    "#{vendorBuildDir}/_deps/dawn-src/include/dawn/*.h",
                    :destdir => "dawn"
                 );
                 incfiles << addPublicIncludes(
-                    "#{libSource}/include/webgpu/*.hpp",
-                    :destdir => "webgpu"
+                    "#{vendorBuildDir}/_deps/dawn-src/include/webgpu/*.h",
+                    :destdir => "dawn"
+                );
+                incfiles << addPublicIncludes(
+                    "#{vendorBuildDir}/_deps/dawn-src/include/dawn/native/*.h",
+                    :destdir => "dawn/native"
+                );
+                incfiles << addPublicIncludes(
+                    "#{vendorBuildDir}/_deps/dawn-src/include/dawn/platform/*.h",
+                    :destdir => "dawn/platform"
                 );
                 pubTargs.addDependencies(incfiles);
 
