@@ -10,5 +10,6 @@ add_subdirectory ("./oss-libpng")
 add_subdirectory ("./oss-glfw")
 add_subdirectory ("./vk-spirv-reflect")
 add_subdirectory ("./tinyobjloader")
+add_subdirectory ("./google-dawn")
 
 # add_subdirectory ("./freetype")

@@ -15,8 +15,9 @@ module Rakish
             './oss-glm',
             './oss-glfw',
             './oss-stb',
-            './tinyobjloader'
-        ];
+            './tinyobjloader',
+            './google-dawn'
+          ];
 
         if(cfg.targetPlatform =~ /MacOS/ )
             dependsList << './molten-vk';
