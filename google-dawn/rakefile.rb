@@ -23,10 +23,12 @@ Rakish.Project(
 
     # readme on building
     # https://github.com/eliemichel/LearnWebGPU
+    # git log -n 1 --pretty=format:"%H" dawn  #To get only hash value
 
 	file libSource do |t|
 	    git.clone("https://github.com/eliemichel/WebGPU-distribution.git", t.name );
 
+        # fb6de4001817debc150bab255dc073e3eb506589
 	    FileUtils.cd(t.name) do
 	        git.checkout("dawn");
 	    end
