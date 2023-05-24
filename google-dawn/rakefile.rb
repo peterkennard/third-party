@@ -115,8 +115,8 @@ Rakish.Project(
             end
         end
 
-        export task :vendorLibs => [ libSource, :buildVendorLibs, :publicTargets ] do |t|
-        end
+        export task :vendorLibs => [ libSource, :buildVendorLibs, :publicTargets ];
+        export task :genProject => [ :vendorLibs ];
 
     end
 
