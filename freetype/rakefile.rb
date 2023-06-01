@@ -3,7 +3,7 @@ require "#{myDir}/../build-options.rb"
 require "rakish/GitModule"
 
 depends=[
-    "#{myDir}/../zlib",
+    "#{myDir}/../oss-zlib",
     "#{myDir}/../oss-libpng",
 ]
 
@@ -47,7 +47,7 @@ Rakish.Project(
 
                 if(targetPlatform =~ /Windows/ )
                     cmd = "#{cmakeCommand} -G \"#{cMakeGenerator}\""
-                    cmd += " \"-DBUILD_SHARED_LIBS=TRUE\""  # shared lib not supported ?
+                    cmd += " \"-DBUILD_SHARED_LIBS=FALSE\""  # shared lib not supported ?
                     cmd += " \"-DSKIP_INSTALL_ALL=TRUE\""
 
                     cmd += " \"-DZLIB_LIBRARY=#{buildDir}/lib/Debug/zlibd#{cfg.libExt}\""
@@ -80,8 +80,8 @@ Rakish.Project(
             end
 
             FileUtils::cd(projectDir) do
-    #            cmd = "#{cmakeCommand} --build build --config RELEASE";
-    #            system(cmd);
+                cmd = "#{cmakeCommand} --build build --config RELEASE";
+                system(cmd);
                 cmd = "#{cmakeCommand} --build build --config DEBUG";
                 system(cmd);
 
@@ -91,9 +91,9 @@ Rakish.Project(
                     # list of files to copy to main build lib and bin areas
                     flist = createCopyTasks("#{buildDir}",
                                             "#{vendorBuildDir}/bin/Debug/freetype*.*",
-                                  #          "#{vendorBuildDir}/bin/Release/freetype*.*",
+                                            "#{vendorBuildDir}/bin/Release/freetype*.*",
                                             "#{vendorBuildDir}/lib/Debug/freetype*.*",
-                                  #          "#{vendorBuildDir}/lib/Release/freetype*.*",
+                                            "#{vendorBuildDir}/lib/Release/freetype*.*",
                                             :basedir => "#{vendorBuildDir}"
                                             )
                 elsif(targetPlatform =~ /MacOS/)

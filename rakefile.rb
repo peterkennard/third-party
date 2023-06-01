@@ -16,7 +16,8 @@ module Rakish
             './oss-glfw',
             './oss-stb',
             './tinyobjloader',
-            './google-dawn'
+            './google-dawn',
+            './freetype'
           ];
 
         if(cfg.targetPlatform =~ /MacOS/ )

@@ -12,4 +12,4 @@ add_subdirectory ("./vk-spirv-reflect")
 add_subdirectory ("./tinyobjloader")
 add_subdirectory ("./google-dawn")
 
-# add_subdirectory ("./freetype")
+add_subdirectory ("./freetype")
